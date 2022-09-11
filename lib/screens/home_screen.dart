@@ -39,9 +39,39 @@ class _Home_screrenState extends State<Home_screren> {
     });
   }
 
-  Future<void>CameraFunction()async{
+  void alertBox(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: const Text('Can we Add this Image'),
+            content: const Text(
+                'By Clicking yes you agree to add this image to Storage'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  AddImageToDatabase();
+                  Navigator.pop(context);
+                },
+                child: Text('YES'),
+              ),
+              TextButton(
+                  onPressed: () {
+                    setState(() {
+                      imagePath = null;
+                    });
+                    Navigator.pop(context);
+                    print('No Pressed');
+                  },
+                  child: Text('NO'))
+            ],
+          );
+        });
+  }
+
+  Future<void> CameraFunction() async {
     final image = await ImagePicker().pickImage(source: ImageSource.camera);
-    if (image==null){
+    if (image == null) {
       return;
     }
     await GallerySaver.saveImage(image.path);
@@ -66,8 +96,9 @@ class _Home_screrenState extends State<Home_screren> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SizedBox(height: 40,),
             Container(
               height: 300,
               width: 300,
@@ -85,9 +116,9 @@ class _Home_screrenState extends State<Home_screren> {
                       color: Color.fromARGB(255, 3, 87, 102),
                     ),
                   ),
-                  child:(imagePath==null)?Image.asset("assets/img/dummyProfile.png"):Image.file(File(imagePath!)),
-                  
-                  
+                  child: (imagePath == null)
+                      ? Image.asset("assets/img/dummyProfile.png")
+                      : Image.file(File(imagePath!)),
                 ),
               ),
             ),
@@ -105,7 +136,8 @@ class _Home_screrenState extends State<Home_screren> {
                     onPressed: () {
                       CameraFunction();
                       print('Image Added');
-                      AddImageToDatabase();
+                      //AddImageToDatabase();
+                      alertBox(context);
                     },
                     icon: Icon(Icons.camera),
                     label: Text(
