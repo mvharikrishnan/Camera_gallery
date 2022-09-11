@@ -1,8 +1,15 @@
+import 'package:camera_app_gallery/Models/Image_model.dart';
 import 'package:camera_app_gallery/screens/home_screen.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
-void main(){
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
+
+Future<void>main() async{
+  await Hive.initFlutter();
+   if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(ImageModelAdapter());
+  }
+  await Hive.openBox<ImageModel>('images');
   runApp(MyApp());
 }
 
